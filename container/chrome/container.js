@@ -1,86 +1,93 @@
-;(function(HostAdmin){	
+;(function (HostAdmin) {
+    function createWindow(url, wid, width, height, cb)  {
+        chrome.app.window.create(url,
+            {id: wid, bounds: {width: width, height: height}, resizable: false}, function (win) {
+                var b = win.getBounds()
+                if (b.width != width || b.height != height) {
+                    win.resizeTo(width, height);
+                }
 
-	var host_admin = HostAdmin.core;
-	var event_host = HostAdmin.event_host;
-	var cur_host;
+                if(cb){
+                    cb(win);
+                }
+            });
+    }
 
-	var opentab = function(t, line){
-		var url = null;
-		if(t == 'EDITOR'){
-			url = chrome.runtime.getURL('core/editor.html');
-		}else if (t == 'PERMHELP'){
-			url = HostAdmin.PERM_HELP_URL;
-		}else{
-			url = t;
-		}
+    chrome.app.runtime.onLaunched.addListener(function (launchData) {
+        createWindow("core/popup.html", "hostadmin_popup", 300, 600);
+    });
 
-		if(url){
-			chrome.tabs.query({ url : url ,windowId: chrome.windows.WINDOW_ID_CURRENT }, function(t){
-				HostAdmin.cursorline = line;
+    var host_admin = HostAdmin.core;
+    var event_host = HostAdmin.event_host;
+    var cur_host;
 
-				if (t.length > 0){
-					chrome.tabs.update(t[0].id, {active : true});
-					HostAdmin.requestCursorLine(line);
-				}else{
-					chrome.tabs.create({url: url});
-				}
+    var opentab = function (t, line) {
+        var url = null;
+        if (t == 'EDITOR') {
+            HostAdmin.cursorline = line;
+            createWindow("core/editor.html", "hostadmin_editor", 850, 600, function(win){
+                HostAdmin.requestCursorLine(line);
+            });
+            return;
+        } else if (t == 'PERMHELP') {
+            url = HostAdmin.PERM_HELP_URL;
+        } else {
+            url = t;
+        }
 
-			});
-		}   
-	};
-	
-	var hostreg = /:\/\/([\w\.\-]+)/;
-	var extracthost = function(url){
-		if(url) {
-			cur_host = url.match(hostreg)[1];
-		}
-		updatelb();
+        if (url) {
+            window.open(url);
+        }
+    };
 
-	};
-	
-	var updatelb = function(){
-		var curHost = host_admin.real_hostname(cur_host);
+    var hostreg = /:\/\/([\w\.\-]+)/;
+    var extracthost = function (url) {
+        if (url) {
+            cur_host = url.match(hostreg)[1];
+        }
+        updatelb();
 
-		var str = "";
-		var hosts = host_admin.get_hosts();
-		if (typeof hosts[curHost] != "undefined") {
-			hosts = hosts[curHost];
-			for (var i in hosts){
-				str = "*";
-				if(hosts[i].using){
-					str = hosts[i].addr + " " + hosts[i].comment;
-					break;
-				}
-			}
-		}		
+    };
 
-		chrome.browserAction.setBadgeBackgroundColor({color:'#0A0'});
-		chrome.browserAction.setBadgeText({text:str});
+    var updatelb = function () {
+        var curHost = host_admin.real_hostname(cur_host);
 
-		if(str == '*') { str = 'In Hosts';}
-		else if( str === "" ) { str = 'Not In Hosts';}
+        var str = "";
+        var hosts = host_admin.get_hosts();
+        if (typeof hosts[curHost] != "undefined") {
+            hosts = hosts[curHost];
+            for (var i in hosts) {
+                str = "*";
+                if (hosts[i].using) {
+                    str = hosts[i].addr + " " + hosts[i].comment;
+                    break;
+                }
+            }
+        }
 
-		chrome.browserAction.setTitle({title: str});
-		
-	};
+        //chrome.browserAction.setBadgeBackgroundColor({color:'#0A0'});
+        //chrome.browserAction.setBadgeText({text:str});
 
-	chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-		extracthost(changeInfo.url);
-	});
-	chrome.tabs.onActivated.addListener(function(activeInfo){
-		chrome.tabs.query({ active: true , windowType: "normal", windowId: chrome.windows.WINDOW_ID_CURRENT }, function(t){
-			if (t.length > 0){
-				extracthost(t[0].url); }
-		});
-	});
+        if (str == '*') {
+            str = 'In Hosts';
+        }
+        else if (str === "") {
+            str = 'Not In Hosts';
+        }
 
-	HostAdmin.container = {
-		opentab : opentab,
-		curhost : function(){ return cur_host;}
-	};
+        //chrome.browserAction.setTitle({title: str});
 
-	event_host.addEventListener('HostAdminRefresh', function(e) {
-		updatelb();
-		chrome.browsingData.removeCache({});
-	}, false);
+    };
+
+    HostAdmin.container = {
+        opentab: opentab,
+        curhost: function () {
+            return cur_host;
+        }
+    };
+
+    event_host.addEventListener('HostAdminRefresh', function (e) {
+        updatelb();
+        //chrome.browsingData.removeCache({});
+    }, false);
 })(window.HostAdmin);

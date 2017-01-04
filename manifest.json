@@ -1,24 +1,23 @@
 {
-	"name": "HostAdmin",
-		"icons": {
-			"16" : "icons/icon16.png",
-			"24" : "icons/icon24.png",
-			"32" : "icons/icon32.png",
-			"128": "icons/icon128.png"
-		},
-		"version": "1.4.8",
-		"manifest_version": 2,
-		"permissions": ["tabs", "browsingData"],
-		"description": "Saving your time when you switch domain-ip mapping (Hosts file) between different environment. Awesome host file editor !",
-		"background": {
-			"persistent": true, 
-			"page": "container/chrome/background.html"
-		},
-		
-		"plugins": [{"path": "npapi/hostadmin.x86.so"}, {"path": "npapi/hostadmin.amd64.so"}, {"path": "npapi/hostadmin.dll"},{"path": "npapi/hostadmin.plugin"}],
-		"browser_action": {
-			"default_icon": "icons/icon128.png",	
-			"default_popup": "core/popup.html"
-		}
-
+   "app": {
+      "background": {
+         "page": "container/chrome/background.html",
+         "persistent": true
+      }
+   },
+   "description": "自动更新最新可用的google hosts文件",
+   "icons": {
+      "128": "icons/icon128.png",
+      "16": "icons/icon16.png",
+      "24": "icons/icon24.png",
+      "32": "icons/icon32.png"
+   },
+   "manifest_version": 2,
+   "minimum_chrome_version": "31",
+   "name": "Free Hosts",
+   "permissions": [ {
+      "fileSystem": [ "write", "retainEntries" ]
+   }, "storage" , "https://*.github.com/*", "https://*.githubusercontent.com/*"],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.5.0.1"
 }
