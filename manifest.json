@@ -1,23 +1,38 @@
 {
-   "app": {
-      "background": {
-         "page": "container/chrome/background.html",
-         "persistent": true
-      }
-   },
-   "description": "自动更新最新可用的google hosts文件",
-   "icons": {
-      "128": "icons/icon128.png",
-      "16": "icons/icon16.png",
-      "24": "icons/icon24.png",
-      "32": "icons/icon32.png"
-   },
-   "manifest_version": 2,
-   "minimum_chrome_version": "31",
-   "name": "Free Hosts",
-   "permissions": [ {
-      "fileSystem": [ "write", "retainEntries" ]
-   }, "storage" , "https://*.github.com/*", "https://*.githubusercontent.com/*"],
-   "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.5.0.1"
+    "app": {
+        "background": {
+            "scripts": [
+                "core/init.js",
+                "container/chrome/config.js",
+                "container/chrome/host_file_wrapper.js",
+                "core/hostadmin.js",
+                "container/chrome/timer.js",
+                "container/chrome/container.js"
+            ]
+        }
+    },
+
+    "description": "自动更新最新可用的google hosts文件",
+    "icons": {
+        "128": "icons/icon128.png",
+        "16": "icons/icon16.png",
+        "24": "icons/icon24.png",
+        "32": "icons/icon32.png"
+    },
+    "manifest_version": 2,
+    "minimum_chrome_version": "31",
+    "name": "Free Hosts",
+    "permissions": [
+        {
+            "fileSystem": [
+                "write",
+                "retainEntries"
+            ]
+        },
+        "storage",
+        "https://*.github.com/*",
+        "https://*.githubusercontent.com/*"
+    ],
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "version": "0.1.1"
 }

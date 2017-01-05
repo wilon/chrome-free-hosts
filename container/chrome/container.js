@@ -14,7 +14,7 @@
     }
 
     chrome.app.runtime.onLaunched.addListener(function (launchData) {
-        createWindow("core/popup.html", "hostadmin_popup", 300, 600);
+        createWindow("core/popup.html", "hostadmin_popup", 800, 600);
     });
 
     var host_admin = HostAdmin.core;

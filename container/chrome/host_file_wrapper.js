@@ -25,9 +25,7 @@
                         host_entry = entry;
                         chrome.fileSystem.isWritableEntry(host_entry, function(isWritable){
                             write_able = isWritable;
-
                             cb();
-
                         });
                     });
                 });
@@ -103,7 +101,10 @@
             return this.pending_write();
         },
         pending_write : function(){
-            return write_able && pending_write == null && !write_error;
+            return write_able && pending_write !== null && !write_error;
+        },
+        write_able: function () {
+            return write_able;
         },
         time: function () {
             return modified_time;
