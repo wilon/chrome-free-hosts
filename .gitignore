@@ -1,14 +1,4 @@
 .*
-
-npapi/src/hostadmin.vcproj.*
-npapi/src/hostadmin.ncb
-npapi/src/hostadmin.suo
-npapi/src/Release/
-npapi/src/Debug/
-
-npapi/src/*.so
-npapi/src/*.o
-
 xcuserdata
 
 .DS_Store
@@ -16,5 +6,4 @@ xcuserdata
 *~.nib
 
 *.zip
-*.crx
 *.xpi
