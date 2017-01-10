@@ -1,12 +1,12 @@
 // HostAdmin
 // by T.G.(farmer1992@gmail.com)
 //
-// core module 
+// core module
 // implentment of hostadmin syntax
 // http://code.google.com/p/fire-hostadmin/wiki/HOST_SYNTAX
 //
 (function(HostAdmin){
-	
+
 	var host_file_wrapper = HostAdmin.host_file_wrapper;
 	var event_host = HostAdmin.event_host;
 
@@ -22,9 +22,9 @@
 		var hostname_withoutcase = {};
 
 		var cur_host_content = "";
-		
+
 		var loadhost = function() {
-		
+
 			lines = [];
 			hosts = {};
 			groups = {};
@@ -32,7 +32,7 @@
 			//read
 			var host = host_file_wrapper.get();
 			cur_host_content = host;
-			
+
 			if (host && host.charAt(host.length - 1) != "\n"){ //fix no lf
 				host += host_file_wrapper.splitchar;
 			}
@@ -53,14 +53,14 @@
 
 				var i;
 				l = l[0];
-				
+
 				lines[l_p++] = l;
 
 				l = l.replace(/^(\s*#)+/,"#");
 				l = l.replace(/#/g," # ");
 				l = l.replace(/^\s+|\s+$/g,"");
 				l = l.replace(/\s+/g," ");
-				
+
 				var tks = l.split(" ");
 
 				if (tks[0] == "#" && tks[1] == "===="){
@@ -89,18 +89,18 @@
 						ingroup = false;
 						group_id++;
 					}
-					continue;	
+					continue;
 
 				} else if (tks[0] == "#" && tks[1] && tks[1].toUpperCase() == "HIDE_ALL_OF_BELOW"){
 					bulk_hide = true;
 				}
-							
+
 				var using = true;
 				if (tks[0] == "#"){
 					using = false;
 					tks.splice(0,1);
 				}
-				
+
 				var ip = "";
 				if (ip_regx.test(tks[0]) || ip6_regx.test(tks[0])){
 					ip = tks[0];
@@ -108,7 +108,7 @@
 				}else{
 					continue;
 				}
-				
+
 				var comment = "";
 
 				var names = [];
@@ -121,7 +121,7 @@
 					}
 
 					findhide = tks[i].toUpperCase() == 'HIDE'
-					
+
 					if(findc){
 						comment += tks[i] + " ";
 					}else{
@@ -134,26 +134,26 @@
 				}
 
 				ip = {
-					addr : ip, 
+					addr : ip,
 					using : using ,
 					line : l_p - 1,
 					comment : comment,
 					group : ingroup ? group_id : 0,
 					hide : bulk_hide || findhide || (ingroup && group_hided[group_id] === true)
 				};
-	
+
 				for (i in names){
 					var name = names[i];
 					if(typeof hosts[name] == "undefined"){
 						hosts[name] = [];
 					}
-				
+
 					hosts[name].push(ip);
 					hostname_withoutcase[name.toUpperCase()] = name;
 				}
 			}
 		};
-		
+
 		var line_enable = function(ip){
 			if(!ip.using){
 				lines[ip.line] = lines[ip.line].replace(/^(\s*#)+/,"");
@@ -174,7 +174,7 @@
 				var using = hosts[host_name][ip_p].using;
 				for (var i in hosts[host_name]){
 					var ip = hosts[host_name][i];
-					
+
 					if(ip.addr == addr && !using){
 						line_enable(ip);
 					}else{
@@ -198,11 +198,11 @@
 
 		var group_toggle = function(host_list, gp_p){
 			var using = is_group_all_using(host_list, gp_p);
-			
+
 			for(var h in host_list){
 				for (var i in hosts[host_list[h]]){
 					var ip = hosts[host_list[h]][i];
-					
+
 					if(ip.group == gp_p){
 						if(using){
 							line_disable(ip);
@@ -223,21 +223,21 @@
 			}
 			return str;
 		};
-		
+
 		var last_modify = 0;
-		
-		// {{{		
+
+		// {{{
 
 		var disp_refresh_event = function(){
 			var e = event_host.createEvent('Events');
 			e.initEvent('HostAdminRefresh', false, false);
 			event_host.dispatchEvent(e);
 		};
-		
+
 		var last_host_content;
 		var refresh = function(){
 			var t = host_file_wrapper.time();
-			
+
 			if( t != last_modify){
 				loadhost();
 
@@ -254,7 +254,7 @@
 			return false;
 		};
 		// }}}
-		
+
 		return {
 			get_hosts : function(){
 				return hosts;
@@ -267,7 +267,7 @@
 			group_checked : is_group_all_using,
 			// mk_host : mk_host,
 
-			host_toggle_and_save : function(host_name, ip_p){ 
+			host_toggle_and_save : function(host_name, ip_p){
 				host_toggle(host_name, ip_p);
 				return this.save();
 			} ,
@@ -279,7 +279,7 @@
 				if(!hoststr){ hoststr = mk_host();}
 
 				var succ = host_file_wrapper.set(hoststr);
-				
+
 				last_modify = 0;
 				this.refresh();
 				return succ;
@@ -294,9 +294,9 @@
 			real_hostname: function(hostname){
 				if(hostname) return hostname_withoutcase[hostname.toUpperCase()];
 			}
-			
+
 		};
-		
+
 	})();
 
 	HostAdmin.core = host_admin;

@@ -1,12 +1,9 @@
 ;(function(HostAdmin){
 	var host_admin = HostAdmin.core;
     var host_file_wrapper = HostAdmin.host_file_wrapper;
-
+    host_admin.refresh();
     var upRacaljkHosts = function(){
-        if (host_file_wrapper.write_able() == false) {
-            console.log(host_file_wrapper.write_able(), host_file_wrapper.get())
-            return;
-        }
+        if (host_file_wrapper.write_able() == false) return;
         get("https://api.github.com/repos/racaljk/hosts/commits", function(xhr) {
             if (xhr.readyState != 4) return;
 
@@ -21,7 +18,8 @@
                 log.getHost = true;
                 chrome.storage.local.get('githubShaXXX', function (items) {
                     if (typeof items.githubShaXXX == 'undefined') {
-                        console.log(host_admin.load());
+
+                        console.log(host_admin.get_hosts());
                         return;
                     }
                     log.commitSha = items.githubShaXXX;
@@ -53,7 +51,7 @@
     upRacaljkHosts();
     setInterval(function () {
         upRacaljkHosts();
-    }, 5000);
+    }, 60000 * 10);
 
 })(window.HostAdmin);
 
