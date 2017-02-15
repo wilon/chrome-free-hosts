@@ -1,11 +1,10 @@
 ;(function(HostAdmin){
-	var host_admin = HostAdmin.core;
-    var host_file_wrapper = HostAdmin.host_file_wrapper;
+		var host_admin = HostAdmin.core;
+		var host_file_wrapper = HostAdmin.host_file_wrapper;
     host_admin.refresh();
     var upRacaljkHosts = function(){
-        if (host_file_wrapper.write_able() == false) return;
+
         get("https://api.github.com/repos/racaljk/hosts/commits", function(xhr) {
-            if (xhr.readyState != 4) return;
 
             var log = {
                 time: new Date().toLocaleString(),
@@ -17,12 +16,7 @@
                 var resp = JSON.parse(xhr.responseText);
                 log.getHost = true;
                 chrome.storage.local.get('githubShaXXX', function (items) {
-                    if (typeof items.githubShaXXX == 'undefined') {
-
-                        console.log(host_admin.get_hosts());
-                        return;
-                    }
-                    log.commitSha = items.githubShaXXX;
+                    log.commitSha = typeof items.githubShaXXX == 'undefined' ? 'xx' : items.githubShaXXX;
                     if (resp[0].sha != log.commitSha) {
                         get("https://raw.githubusercontent.com/racaljk/hosts/master/hosts", function (xhrh) {
                             if (xhrh.readyState != 4) return;
@@ -34,7 +28,9 @@
                         })
                     }
                 });
-            } catch(e) {};
+            } catch(e) {
+								return;
+						};
 
             chrome.storage.local.get('log', function (items) {
                 var localLog = typeof items.log == 'undefined' ? [] : items.log;
@@ -51,7 +47,7 @@
     upRacaljkHosts();
     setInterval(function () {
         upRacaljkHosts();
-    }, 60000 * 10);
+    }, 1000 * 60 *10);
 
 })(window.HostAdmin);
 

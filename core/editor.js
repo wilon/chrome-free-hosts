@@ -1,7 +1,6 @@
 run_from_glue(function(HostAdmin){
     var host_admin = HostAdmin.core;
     var host_file_wrapper = HostAdmin.host_file_wrapper;
-    console.log(host_admin.load())
     var logLoaded = [];
     var load = function () {
         chrome.runtime.getPlatformInfo(function(platformInfo){
@@ -10,14 +9,18 @@ run_from_glue(function(HostAdmin){
             $('#tips code').eq(1).text(wrt);
         });
         chrome.storage.local.get('lastSuccesslog', function (items) {
+            if (items == {}) return;
             var eq2 = '没有更改';
-            if (items.lastSuccesslog.saveHost == true) {
-                var eq2 = items.lastSuccesslog.time + ' 更新成功，可尝试访问<a target="_blank" href="https://www.google.com/ncr">Google</a>';
-            };
+            try {
+                if (items.lastSuccesslog.saveHost == true) {
+                    var eq2 = items.lastSuccesslog.time + ' 更新成功，可尝试访问<a target="_blank" href="https://www.google.com/ncr">Google</a>';
+                };
+            } catch(e) {}
             $('#tips code').eq(2).html(eq2);
             displayLog(items.lastSuccesslog);
         });
         chrome.storage.local.get('log', function (items) {
+            if (items == {}) return;
             if (typeof items.log == 'undefined') return;
             items.log.map(function(elem, index) {
                 displayLog(elem);
@@ -26,11 +29,14 @@ run_from_glue(function(HostAdmin){
         });
 
         function displayLog(elem) {
+            if (typeof elem == 'undefined') return;
             var has = logLoaded.some(function (item, index, array) {
                 return item == elem.time;
             });
             if (has) return;
-            logLoaded.push(elem.time);
+            if (typeof elem.time != 'undefined') {
+                logLoaded.push(elem.time);
+            }
             var desc = elem.getHost == true ? (elem.saveHost == true ? '更新成功' : '无需更新') : '获取host失败';
             var tr = `<tr> <td> <code>${desc}</code> </td> <td>${elem.time}</td> </tr>`;
             $('#saveHostLog').append(tr);
@@ -40,7 +46,7 @@ run_from_glue(function(HostAdmin){
     load();
     setInterval(function(){
         load();
-    }, 5000);
+    }, 1000);
 
     // chrome only button
     $("#btnChoose").click(function(){
@@ -48,7 +54,6 @@ run_from_glue(function(HostAdmin){
         chrome.fileSystem.chooseEntry({type: 'openWritableFile'}, function(host_entry){
             if(host_entry){
                 host_entry.file(function(file){
-                    console.log(host_entry, chrome.fileSystem.retainEntry(host_entry))
                     if(file.name == "hosts"){
                         chrome.storage.local.set({'hostentry': chrome.fileSystem.retainEntry(host_entry)});
                         host_file_wrapper.refresh_file(function(){});

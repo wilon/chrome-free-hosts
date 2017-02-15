@@ -14,10 +14,10 @@
 
     "description": "自动更新最新可用的google hosts文件",
     "icons": {
-        "128": "icons/icon128.png",
         "16": "icons/icon16.png",
         "24": "icons/icon24.png",
-        "32": "icons/icon32.png"
+        "32": "icons/icon32.png",
+        "128": "icons/icon128.png"
     },
     "manifest_version": 2,
     "minimum_chrome_version": "31",
@@ -34,5 +34,5 @@
         "https://*.githubusercontent.com/*"
     ],
     "update_url": "https://clients2.google.com/service/update2/crx",
-    "version": "0.1.1"
+    "version": "1.0.2"
 }
