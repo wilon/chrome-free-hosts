@@ -5,6 +5,7 @@
                 "core/init.js",
                 "container/chrome/config.js",
                 "container/chrome/host_file_wrapper.js",
+                "container/update_googlehost.js",
                 "core/hostadmin.js",
                 "container/chrome/timer.js",
                 "container/chrome/container.js"
@@ -12,7 +13,7 @@
         }
     },
 
-    "description": "自动更新最新可用的google hosts文件",
+    "description": "自动更新最新可用的 google hosts 文件",
     "icons": {
         "16": "icons/icon16.png",
         "24": "icons/icon24.png",
@@ -34,5 +35,5 @@
         "https://*.githubusercontent.com/*"
     ],
     "update_url": "https://clients2.google.com/service/update2/crx",
-    "version": "1.0.2"
+    "version": "1.1.0"
 }

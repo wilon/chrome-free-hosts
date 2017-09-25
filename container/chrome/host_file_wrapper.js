@@ -58,7 +58,9 @@
             write_error = false;
             host_entry.createWriter(function(writer){
 
-                writer.onerror = function(){
+                writer.onerror = function(e){
+                    console.log(e.currentTarget.error.message)
+                    write_able = false;
                     write_error = true;
                 }
                 writer.onwriteend = function(){
