@@ -1,3 +1,9 @@
+
+```diff
++ 此 repo 不再维护，推荐免费 VPN —— 蓝灯
+- 输入我的邀请码 YMD8TTG 来获得三个月的蓝灯专业版！立即下载 https://github.com/getlantern/forum
+```
+
 # Chrome Free Hosts
 
 Chrome插件，自动更新本机host为 [googlehosts/hosts](https://github.com/googlehosts/hosts) 的最新可用的google hosts文件；
